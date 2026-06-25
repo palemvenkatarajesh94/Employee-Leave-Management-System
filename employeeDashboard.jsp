@@ -1,0 +1,29 @@
+package com.leave.servlet;
+
+import java.io.IOException;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import com.leave.dao.LeaveDAO;
+
+@WebServlet("/approveLeave")
+public class ApproveLeaveServlet extends HttpServlet {
+
+    protected void doGet(HttpServletRequest request,
+                         HttpServletResponse response)
+            throws ServletException, IOException {
+
+        int leaveId =
+                Integer.parseInt(request.getParameter("id"));
+
+        LeaveDAO dao = new LeaveDAO();
+
+        dao.updateLeaveStatus(leaveId, "Approved");
+
+        response.sendRedirect("viewLeaves");
+    }
+}

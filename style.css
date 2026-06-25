@@ -1,0 +1,32 @@
+package com.leave.servlet;
+
+import java.io.IOException;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebServlet("/adminLogin")
+public class AdminLoginServlet extends HttpServlet {
+
+    protected void doPost(HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+
+        if(email.equals("admin@gmail.com")
+                && password.equals("admin123")) {
+
+            response.sendRedirect("adminDashboard.jsp");
+
+        } else {
+
+            response.getWriter()
+            .println("Invalid Admin Credentials");
+        }
+    }
+}

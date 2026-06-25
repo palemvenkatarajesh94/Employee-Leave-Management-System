@@ -1,0 +1,59 @@
+package com.leave.servlet;
+
+import java.io.IOException;
+import java.util.List;
+
+import com.leave.dao.LeaveDAO;
+import com.leave.model.Employee;
+import com.leave.model.Leave;
+
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
+@WebServlet("/myLeaves")
+public class MyLeavesServlet extends HttpServlet {
+
+    protected void doGet(HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // Get existing session
+        HttpSession session = request.getSession(false);
+
+        // Check whether session exists
+        if (session == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        // Get employee object from session
+        Employee emp = (Employee) session.getAttribute("employee");
+
+        // Check whether employee object exists
+        if (emp == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        System.out.println("Employee ID = " + emp.getEmpId());
+
+        // Get employee leave details
+        LeaveDAO dao = new LeaveDAO();
+
+        List<Leave> list =
+                dao.getLeavesByEmployee(emp.getEmpId());
+
+        // Send data to JSP page
+        request.setAttribute("myLeaves", list);
+
+        RequestDispatcher rd =
+                request.getRequestDispatcher("myLeaves.jsp");
+
+        rd.forward(request, response);
+    }
+}
